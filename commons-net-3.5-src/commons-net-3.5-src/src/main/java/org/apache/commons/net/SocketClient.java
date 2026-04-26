@@ -60,13 +60,9 @@ public abstract class SocketClient
      */
     public static final String NETASCII_EOL = "\r\n";
 
-    /** The default SocketFactory shared by all SocketClient instances. */
-    private static final SocketFactory __DEFAULT_SOCKET_FACTORY =
-            SocketFactory.getDefault();
-
-    /** The default {@link ServerSocketFactory} */
-    private static final ServerSocketFactory __DEFAULT_SERVER_SOCKET_FACTORY =
-            ServerSocketFactory.getDefault();
+    /** The shared provider for default socket factories. */
+    private static final SocketFactoryProvider __SOCKET_FACTORY_PROVIDER =
+            SocketFactoryProvider.getInstance();
 
     /**
      * A ProtocolCommandSupport object used to manage the registering of
@@ -131,8 +127,8 @@ public abstract class SocketClient
         _output_ = null;
         _timeout_ = 0;
         _defaultPort_ = 0;
-        _socketFactory_ = __DEFAULT_SOCKET_FACTORY;
-        _serverSocketFactory_ = __DEFAULT_SERVER_SOCKET_FACTORY;
+        _socketFactory_ = __SOCKET_FACTORY_PROVIDER.getSocketFactory();
+        _serverSocketFactory_ = __SOCKET_FACTORY_PROVIDER.getServerSocketFactory();
     }
 
 
@@ -706,7 +702,7 @@ public abstract class SocketClient
     public void setSocketFactory(SocketFactory factory)
     {
         if (factory == null) {
-            _socketFactory_ = __DEFAULT_SOCKET_FACTORY;
+            _socketFactory_ = __SOCKET_FACTORY_PROVIDER.getSocketFactory();
         } else {
             _socketFactory_ = factory;
         }
@@ -727,7 +723,7 @@ public abstract class SocketClient
      */
     public void setServerSocketFactory(ServerSocketFactory factory) {
         if (factory == null) {
-            _serverSocketFactory_ = __DEFAULT_SERVER_SOCKET_FACTORY;
+            _serverSocketFactory_ = __SOCKET_FACTORY_PROVIDER.getServerSocketFactory();
         } else {
             _serverSocketFactory_ = factory;
         }
