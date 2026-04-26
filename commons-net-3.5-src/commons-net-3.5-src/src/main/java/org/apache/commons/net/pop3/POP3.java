@@ -271,23 +271,47 @@ public class POP3 extends SocketClient
      * @return  The server reply code (either POP3Reply.OK, POP3Reply.ERROR or POP3Reply.OK_INT).
      * @throws IOException on error
      ***/
-    public int sendCommand(int command, String args) throws IOException
+    /**
+     * Sends a POP3 command with arguments using the type-safe enum constant.
+     *
+     * @param command  The {@link POP3Command} enum constant to send.
+     * @param args     The command arguments, or {@code null} for none.
+     * @return  The server reply code (POP3Reply.OK, POP3Reply.ERROR or POP3Reply.OK_INT).
+     * @throws IOException on error
+     */
+    public int sendCommand(POP3Command command, String args) throws IOException
     {
-        return sendCommand(POP3Command._commands[command], args);
+        return sendCommand(command.getCommand(), args);
     }
 
-    /***
-     * Sends a command with no arguments to the server and returns the
-     * reply code.
+    /**
+     * Sends a POP3 command with no arguments using the type-safe enum constant.
      *
-     * @param command  The POP3 command to send
-     *                  (one of the POP3Command constants).
-     * @return  The server reply code (either POP3Reply.OK, POP3Reply.ERROR or POP3Reply.OK_INT).
+     * @param command  The {@link POP3Command} enum constant to send.
+     * @return  The server reply code (POP3Reply.OK, POP3Reply.ERROR or POP3Reply.OK_INT).
      * @throws IOException on error
-     ***/
+     */
+    public int sendCommand(POP3Command command) throws IOException
+    {
+        return sendCommand(command, null);
+    }
+
+    /**
+     * @deprecated Use {@link #sendCommand(POP3Command, String)} instead.
+     */
+    @Deprecated
+    public int sendCommand(int command, String args) throws IOException
+    {
+        return sendCommand(POP3Command.values()[command], args);
+    }
+
+    /**
+     * @deprecated Use {@link #sendCommand(POP3Command)} instead.
+     */
+    @Deprecated
     public int sendCommand(int command) throws IOException
     {
-        return sendCommand(POP3Command._commands[command], null);
+        return sendCommand(POP3Command.values()[command], null);
     }
 
 

@@ -319,6 +319,93 @@ public class FTPClientConfig
         this.serverTimeZoneId = serverTimeZoneId;
     }
 
+    /**
+     * Fluent builder for {@link FTPClientConfig}.
+     * <p>
+     * Example:
+     * <pre>
+     *   FTPClientConfig config = new FTPClientConfig.Builder(FTPClientConfig.SYST_UNIX)
+     *       .serverTimeZoneId("America/New_York")
+     *       .defaultDateFormatStr("MMM d yyyy")
+     *       .lenientFutureDates(false)
+     *       .build();
+     * </pre>
+     *
+     * @since 3.5
+     */
+    public static final class Builder {
+
+        private final String serverSystemKey;
+        private String defaultDateFormatStr = null;
+        private String recentDateFormatStr = null;
+        private boolean lenientFutureDates = true;
+        private String serverLanguageCode = null;
+        private String shortMonthNames = null;
+        private String serverTimeZoneId = null;
+        private boolean saveUnparseableEntries = false;
+
+        /**
+         * @param serverSystemKey key representing the system type of the server.
+         *        Use one of the {@code SYST_*} constants on {@link FTPClientConfig}.
+         */
+        public Builder(String serverSystemKey) {
+            this.serverSystemKey = serverSystemKey;
+        }
+
+        public Builder defaultDateFormatStr(String defaultDateFormatStr) {
+            this.defaultDateFormatStr = defaultDateFormatStr;
+            return this;
+        }
+
+        public Builder recentDateFormatStr(String recentDateFormatStr) {
+            this.recentDateFormatStr = recentDateFormatStr;
+            return this;
+        }
+
+        public Builder lenientFutureDates(boolean lenientFutureDates) {
+            this.lenientFutureDates = lenientFutureDates;
+            return this;
+        }
+
+        public Builder serverLanguageCode(String serverLanguageCode) {
+            this.serverLanguageCode = serverLanguageCode;
+            return this;
+        }
+
+        public Builder shortMonthNames(String shortMonthNames) {
+            this.shortMonthNames = shortMonthNames;
+            return this;
+        }
+
+        public Builder serverTimeZoneId(String serverTimeZoneId) {
+            this.serverTimeZoneId = serverTimeZoneId;
+            return this;
+        }
+
+        public Builder saveUnparseableEntries(boolean saveUnparseableEntries) {
+            this.saveUnparseableEntries = saveUnparseableEntries;
+            return this;
+        }
+
+        /**
+         * Construct the {@link FTPClientConfig} from the accumulated builder state.
+         *
+         * @return a fully configured, immutable-on-construction {@link FTPClientConfig}
+         */
+        public FTPClientConfig build() {
+            return new FTPClientConfig(
+                serverSystemKey,
+                defaultDateFormatStr,
+                recentDateFormatStr,
+                serverLanguageCode,
+                shortMonthNames,
+                serverTimeZoneId,
+                lenientFutureDates,
+                saveUnparseableEntries
+            );
+        }
+    }
+
     // Copy constructor, intended for use by FTPClient only
     FTPClientConfig(String systemKey, FTPClientConfig config) {
         this.serverSystemKey = systemKey;

@@ -172,17 +172,16 @@ public class SMTP extends SocketClient
     }
 
     /**
-     *
-     * @param command the command to send (as an int defined in {@link SMPTCommand})
+     * @param command the SMTPCommand enum constant to send
      * @param args the command arguments, may be {@code null}
      * @param includeSpace if {@code true}, add a space between the command and its arguments
      * @return the reply code
      * @throws IOException
      */
-    private int __sendCommand(int command, String args, boolean includeSpace)
+    private int __sendCommand(SMTPCommand command, String args, boolean includeSpace)
     throws IOException
     {
-        return __sendCommand(SMTPCommand.getCommand(command), args, includeSpace);
+        return __sendCommand(command.getCommand(), args, includeSpace);
     }
 
     private void __getReply() throws IOException
@@ -336,9 +335,26 @@ public class SMTP extends SocketClient
      * @exception IOException  If an I/O error occurs while either sending the
      *      command or receiving the server reply.
      ***/
+    /**
+     * Sends an SMTP command to the server using the type-safe enum constant.
+     *
+     * @param command  The {@link SMTPCommand} enum constant to send.
+     * @param args The arguments to the SMTP command, or {@code null} for none.
+     * @return The integer value of the SMTP reply code.
+     * @throws IOException If an I/O error occurs.
+     */
+    public int sendCommand(SMTPCommand command, String args) throws IOException
+    {
+        return sendCommand(command.getCommand(), args);
+    }
+
+    /**
+     * @deprecated Use {@link #sendCommand(SMTPCommand, String)} instead.
+     */
+    @Deprecated
     public int sendCommand(int command, String args) throws IOException
     {
-        return sendCommand(SMTPCommand.getCommand(command), args);
+        return sendCommand(SMTPCommand.values()[command].getCommand(), args);
     }
 
 
@@ -385,9 +401,25 @@ public class SMTP extends SocketClient
      * @exception IOException  If an I/O error occurs while either sending the
      *      command or receiving the server reply.
      ***/
-    public int sendCommand(int command) throws IOException
+    /**
+     * Sends an SMTP command with no arguments using the type-safe enum constant.
+     *
+     * @param command  The {@link SMTPCommand} enum constant to send.
+     * @return The integer value of the SMTP reply code.
+     * @throws IOException If an I/O error occurs.
+     */
+    public int sendCommand(SMTPCommand command) throws IOException
     {
         return sendCommand(command, null);
+    }
+
+    /**
+     * @deprecated Use {@link #sendCommand(SMTPCommand)} instead.
+     */
+    @Deprecated
+    public int sendCommand(int command) throws IOException
+    {
+        return sendCommand(SMTPCommand.values()[command], null);
     }
 
 

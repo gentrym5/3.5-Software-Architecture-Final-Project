@@ -276,9 +276,26 @@ public class NNTP extends SocketClient
      * @exception IOException  If an I/O error occurs while either sending the
      *      command or receiving the server reply.
      ***/
+    /**
+     * Sends an NNTP command to the server using the type-safe enum constant.
+     *
+     * @param command  The {@link NNTPCommand} enum constant to send.
+     * @param args The arguments to the NNTP command, or {@code null} for none.
+     * @return The integer value of the NNTP reply code.
+     * @throws IOException If an I/O error occurs.
+     */
+    public int sendCommand(NNTPCommand command, String args) throws IOException
+    {
+        return sendCommand(command.getCommand(), args);
+    }
+
+    /**
+     * @deprecated Use {@link #sendCommand(NNTPCommand, String)} instead.
+     */
+    @Deprecated
     public int sendCommand(int command, String args) throws IOException
     {
-        return sendCommand(NNTPCommand.getCommand(command), args);
+        return sendCommand(NNTPCommand.values()[command].getCommand(), args);
     }
 
 
@@ -325,9 +342,25 @@ public class NNTP extends SocketClient
      * @exception IOException  If an I/O error occurs while either sending the
      *      command or receiving the server reply.
      ***/
-    public int sendCommand(int command) throws IOException
+    /**
+     * Sends an NNTP command with no arguments using the type-safe enum constant.
+     *
+     * @param command  The {@link NNTPCommand} enum constant to send.
+     * @return The integer value of the NNTP reply code.
+     * @throws IOException If an I/O error occurs.
+     */
+    public int sendCommand(NNTPCommand command) throws IOException
     {
         return sendCommand(command, null);
+    }
+
+    /**
+     * @deprecated Use {@link #sendCommand(NNTPCommand)} instead.
+     */
+    @Deprecated
+    public int sendCommand(int command) throws IOException
+    {
+        return sendCommand(NNTPCommand.values()[command], null);
     }
 
 

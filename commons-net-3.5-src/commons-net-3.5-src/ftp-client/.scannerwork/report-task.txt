@@ -1,6 +1,0 @@
-projectKey=commons-net-ftp-3.5
-serverUrl=http://localhost:9000
-serverVersion=25.2.0.102705
-dashboardUrl=http://localhost:9000/dashboard?id=commons-net-ftp-3.5
-ceTaskId=f022e908-128f-4ee8-8a68-31a235e0ac68
-ceTaskUrl=http://localhost:9000/api/ce/task?id=f022e908-128f-4ee8-8a68-31a235e0ac68
