@@ -295,7 +295,9 @@ public class NNTPClient extends NNTP
             __parseArticlePointer(getReplyString(), pointer);
         }
 
-        return new DotTerminatedMessageReader(_reader_);
+        // Delegate raw-stream wrapping to the NNTP base class to keep the
+        // Facade contract consistent (Part 1 Problem 3).
+        return openMessageReader();
     }
 
 
@@ -311,7 +313,9 @@ public class NNTPClient extends NNTP
             __parseArticlePointer(getReplyString(), pointer);
         }
 
-        return new DotTerminatedMessageReader(_reader_);
+        // Delegate raw-stream wrapping to the NNTP base class to keep the
+        // Facade contract consistent (Part 1 Problem 3).
+        return openMessageReader();
     }
 
 
@@ -1400,7 +1404,10 @@ public class NNTPClient extends NNTP
             return null;
         }
 
-        return new DotTerminatedMessageWriter(_writer_);
+        // Delegate raw-stream wrapping to the NNTP base class so this Facade
+        // method does not access the protected _writer_ field directly
+        // (Part 1 Problem 3).
+        return getDataWriter();
     }
 
 
@@ -1410,7 +1417,10 @@ public class NNTPClient extends NNTP
             return null;
         }
 
-        return new DotTerminatedMessageWriter(_writer_);
+        // Delegate raw-stream wrapping to the NNTP base class so this Facade
+        // method does not access the protected _writer_ field directly
+        // (Part 1 Problem 3).
+        return getDataWriter();
     }
 
 

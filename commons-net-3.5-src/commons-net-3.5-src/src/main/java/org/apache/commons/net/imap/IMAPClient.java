@@ -266,9 +266,10 @@ public class IMAPClient extends IMAP
             return doCommand (IMAPCommand.APPEND, args.toString());
         }
         args.append('{').append(message.length()).append('}'); // length of message
-        final int status = sendCommand(IMAPCommand.APPEND, args.toString());
-        return IMAPReply.isContinuation(status) // expecting continuation response
-            && IMAPReply.isSuccess(sendData(message)); // if so, send the data
+        // Delegate the two-step continuation+literal protocol to the IMAP
+        // base class so this Facade method does not have to inspect raw
+        // reply codes or invoke sendData directly.
+        return appendWithData(args.toString(), message);
     }
 
     /**

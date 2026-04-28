@@ -401,6 +401,37 @@ public class IMAP extends SocketClient
     }
 
     /**
+     * Performs the full two-step IMAP APPEND wire exchange: sends the APPEND
+     * command (which carries the literal length in the arguments), waits for
+     * the server's continuation response, and then transmits the literal
+     * message data. Returns whether the server ultimately accepted the
+     * literal.
+     * <p>
+     * This method exists so that {@link IMAPClient#append(String, String,
+     * String, String)} can remain a pure Facade method that does not need to
+     * inspect raw protocol reply codes such as {@link IMAPReply#isContinuation(int)}
+     * or invoke {@link #sendData(String)} directly. All raw-protocol logic
+     * stays inside the {@code IMAP} base class, in keeping with the Facade
+     * pattern enforced by Part 1 Problem 3.
+     *
+     * @param args    The fully formatted APPEND argument string, including
+     *                the trailing literal length token (for example,
+     *                {@code "INBOX (\\Seen) {123}"}).
+     * @param message The literal message data to send after the continuation
+     *                response is received.
+     * @return {@code true} if the server returned a continuation response and
+     *         then accepted the literal message data, {@code false} otherwise.
+     * @throws IOException on network error.
+     * @since 3.5 (Part 1 Problem 3 - Facade pattern reinforcement)
+     */
+    public boolean appendWithData(String args, String message) throws IOException
+    {
+        final int status = sendCommand(IMAPCommand.APPEND, args);
+        return IMAPReply.isContinuation(status)
+            && IMAPReply.isSuccess(sendData(message));
+    }
+
+    /**
      * Returns an array of lines received as a reply to the last command
      * sent to the server.  The lines have end of lines truncated.
      * @return The last server response.

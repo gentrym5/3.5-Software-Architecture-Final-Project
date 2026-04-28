@@ -22,11 +22,14 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 import org.apache.commons.net.MalformedServerReplyException;
 import org.apache.commons.net.ProtocolCommandSupport;
 import org.apache.commons.net.SocketClient;
 import org.apache.commons.net.io.CRLFLineReader;
+import org.apache.commons.net.io.DotTerminatedMessageReader;
+import org.apache.commons.net.io.DotTerminatedMessageWriter;
 
 /***
  * The NNTP class is not meant to be used by itself and is provided
@@ -1048,6 +1051,54 @@ public class NNTP extends SocketClient
     @Override
     protected ProtocolCommandSupport getCommandSupport() {
         return _commandSupport_;
+    }
+
+    // -----------------------------------------------------------------
+    // Raw-protocol I/O accessors (Part 1 Problem 3 - Facade pattern)
+    //
+    // The methods below are the raw-protocol entry points for reading
+    // multi-line server responses and posting article data. They are
+    // exposed here, on the NNTP base class, so that NNTPClient can use
+    // them as the only sanctioned access points to the protocol streams
+    // and stop reaching into the protected _reader_ and _writer_ fields
+    // directly. This keeps the Facade pattern consistent with FTPClient.
+    // -----------------------------------------------------------------
+
+    /**
+     * Returns a {@link BufferedReader} wrapped in a
+     * {@link DotTerminatedMessageReader} that reads the next dot-terminated
+     * multi-line response from the server. This is the raw-protocol read
+     * point used after commands such as ARTICLE, HEAD, BODY, LIST, XOVER,
+     * and XHDR. Centralizing the wrapping here lets {@link NNTPClient}
+     * remain a Facade that does not need to construct readers over the
+     * protected control stream itself.
+     *
+     * @return A {@link BufferedReader} positioned at the start of the
+     *         dot-terminated response body. The caller is responsible for
+     *         closing it.
+     * @since 3.5 (Part 1 Problem 3 - Facade pattern reinforcement)
+     */
+    protected BufferedReader openMessageReader()
+    {
+        return new DotTerminatedMessageReader(_reader_);
+    }
+
+    /**
+     * Returns a {@link Writer} wrapped in a {@link DotTerminatedMessageWriter}
+     * for sending an article body after a POST or IHAVE command has received
+     * a positive intermediate response. This is the raw-protocol write point
+     * used by {@link NNTPClient#postArticle()} and
+     * {@link NNTPClient#forwardArticle(String)}. Centralizing the wrapping
+     * here lets {@link NNTPClient} remain a Facade that does not need to
+     * construct writers over the protected control stream itself.
+     *
+     * @return A {@link Writer} for the article body. The caller is
+     *         responsible for closing it.
+     * @since 3.5 (Part 1 Problem 3 - Facade pattern reinforcement)
+     */
+    protected Writer getDataWriter()
+    {
+        return new DotTerminatedMessageWriter(_writer_);
     }
 }
 
