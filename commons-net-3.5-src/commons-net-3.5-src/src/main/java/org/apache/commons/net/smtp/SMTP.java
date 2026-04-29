@@ -22,12 +22,14 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 
 import org.apache.commons.net.MalformedServerReplyException;
 import org.apache.commons.net.ProtocolCommandSupport;
 import org.apache.commons.net.SocketClient;
 import org.apache.commons.net.io.CRLFLineReader;
+import org.apache.commons.net.io.DotTerminatedMessageWriter;
 
 /***
  * SMTP provides the basic the functionality necessary to implement your
@@ -577,6 +579,27 @@ public class SMTP extends SocketClient
     public int data() throws IOException
     {
         return sendCommand(SMTPCommand.DATA);
+    }
+
+
+    /**
+     * Returns a {@link DotTerminatedMessageWriter} wrapping the protocol
+     * control writer. This is the raw-protocol access point for sending the
+     * payload that follows a DATA command. It is exposed here, on the
+     * {@code SMTP} base class, so that high-level facade callers in
+     * {@link SMTPClient} can obtain the writer without reaching into the
+     * protected {@code _writer} field directly. Encapsulating this access
+     * keeps the Facade pattern consistent: the base class owns all raw
+     * protocol I/O, and the client class only orchestrates high-level
+     * operations.
+     *
+     * @return A {@link Writer} to which the message data may be written.
+     *         The caller is responsible for closing the writer.
+     * @since 3.5 (Part 1 Problem 3 - Facade pattern reinforcement)
+     */
+    protected Writer getDataWriter()
+    {
+        return new DotTerminatedMessageWriter(_writer);
     }
 
 

@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.InetAddress;
 
-import org.apache.commons.net.io.DotTerminatedMessageWriter;
-
 /***
  * SMTPClient encapsulates all the functionality necessary to send files
  * through an SMTP server.  This class takes care of all
@@ -363,7 +361,10 @@ public class SMTPClient extends SMTP
             return null;
         }
 
-        return new DotTerminatedMessageWriter(_writer);
+        // Delegate the raw-protocol writer construction to the base class so
+        // SMTPClient remains a pure Facade that orchestrates high-level
+        // operations without reaching into the protected control stream.
+        return getDataWriter();
     }
 
 
