@@ -1,6 +1,5 @@
 # Process Flow Diagram — Apache Commons Net 3.5 (After Changes)
 
-Paste the block below into any Mermaid renderer (e.g. mermaid.live).
 
 ```mermaid
 flowchart TB
@@ -161,24 +160,4 @@ flowchart TB
     class P_SINGLETON,P_BUILDER,P_ENUM newStyle
 ```
 
----
 
-## Reading This Diagram
-
-- **Boxes with solid borders** are the system's components grouped by layer (top to bottom = the flow of a request through the library).
-- **Orange dashed circles** are pattern annotations that existed before the changes. The dashed arrows show which components each pattern governs.
-- **Purple dashed circles** are new pattern annotations introduced by the changes: Singleton, Builder, and Enum Command.
-- **New and changed components are noted inline** — e.g., `SMTP` now shows that `fireReplyReceived()` is wired and `getDataWriter()` exists; `NNTPSClient` and `TelnetSClient` are new SSL variants in the Protocol Layer.
-- **Overlaps** are visible where multiple pattern circles point to the same component:
-  - `FTPFileEntryParser interface` ← Factory/Abstract Factory **and** Strategy
-  - Concrete parsers ← Strategy **and** Composite
-  - `CompositeFileEntryParser` ← Composite **and** Strategy
-  - `SMTP base class` ← Facade **and** Observer (base holds raw I/O and fires Observer events)
-  - `NNTPSClient`, `TelnetSClient` ← Template Method (override `_connectAction_` to inject SSL)
-- **Singleton Layer** sits above Transport: `SocketFactoryProvider` feeds both `SocketClient` and `DatagramSocketClient` their default factory instances before any protocol work begins.
-
----
-
-## Description
-
-The process flow diagram shows how a request flows through Apache Commons Net 3.5 after all changes, and which design patterns govern each layer. New elements introduced by the changes appear at the top (Singleton Layer — `SocketFactoryProvider`), within the Protocol Layer (`NNTPSClient` and `TelnetSClient` as Template Method SSL variants; `SMTP`, `IMAP`, and `NNTP` base classes now carry Facade accessors and complete Observer wiring), in the new Config Layer (`FTPClientConfig.Builder`), and in the new Command Enum Layer (`SMTPCommand`, `NNTPCommand`, `POP3Command`). Three new pattern circles (Singleton, Builder, Enum Command) are added alongside the original set (Template, Facade, Factory, Strategy, Composite, Observer, Decorator, Adapter, Iterator), and the Facade circle now also points to `SMTPClient`, `IMAPClient`, and `NNTPClient` to reflect their reinforced boundaries.

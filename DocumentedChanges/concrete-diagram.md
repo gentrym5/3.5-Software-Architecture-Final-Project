@@ -1,6 +1,5 @@
 # Concrete Diagram — Apache Commons Net 3.5 (After Changes)
 
-Paste the block below into any Mermaid renderer (e.g. mermaid.live).
 
 ```mermaid
 classDiagram
@@ -384,23 +383,3 @@ classDiagram
     FTPClient --> CopyStreamListener : uses
 ```
 
----
-
-## Reading This Diagram
-
-- Each **namespace box** corresponds to a logical group (package or subsystem).
-- **`SocketFactoryProvider`** is new. It is a Singleton that centralizes the default `SocketFactory`, `ServerSocketFactory`, and `DatagramSocketFactory` instances. Both `SocketClient` and `DatagramSocketClient` now obtain their defaults from it instead of holding static fields independently.
-- Every protocol stack follows the same two-level inheritance from `SocketClient`: low-level command layer → high-level client → SSL variant. **`NNTPSClient`** and **`TelnetSClient`** are new SSL variants that complete this pattern for NNTP and Telnet.
-- **`SMTP`** has three new members: `sendCommand(SMTPCommand, args)`, `sendCommand(SMTPCommand)` (type-safe overloads), and `protected getDataWriter()` (Facade accessor so `SMTPClient` never touches `_writer` directly). `__getReply()` now calls `fireReplyReceived()`, completing Observer coverage.
-- **`IMAP`** has a new `appendWithData(args, message)` method. The two-step APPEND continuation-and-literal wire exchange previously scattered across `IMAPClient` now lives entirely in the base class.
-- **`NNTP`** has three new members: `sendCommand(NNTPCommand, args)`, `sendCommand(NNTPCommand)` (type-safe overloads), `openMessageReader()`, and `getDataWriter()`. Client methods now call these accessors instead of constructing dot-terminated stream wrappers directly.
-- **`FTPClientConfigBuilder`** represents the `FTPClientConfig.Builder` inner class. It collects optional configuration fields through fluent setters and produces a fully configured `FTPClientConfig` via `build()`.
-- **`Command_Enums`** namespace contains `SMTPCommand`, `NNTPCommand`, and `POP3Command` — all converted from classes of `static final int` constants to proper Java enums. The `getCommand()` method returns the wire-format string for each constant.
-- **FTP Parsers** are injected via factory — `FTPClient` never hardcodes an OS format.
-- **Observer Events** are inherited by every protocol through `SocketClient`. After the changes, all line-oriented protocols (FTP, SMTP, IMAP, NNTP) fire both `commandSent` and `replyReceived` consistently.
-
----
-
-## Description
-
-The concrete diagram shows every class, interface, and enum in Apache Commons Net 3.5 after all changes, organized into namespace boxes by subsystem. The key additions are: `SocketFactoryProvider` (Singleton, Transport layer), `NNTPSClient` and `TelnetSClient` (Template Method SSL variants completing the protocol set), `FTPClientConfigBuilder` (Builder for `FTPClientConfig`), `SMTPCommand` / `NNTPCommand` / `POP3Command` (enum upgrades in the Command Enums namespace), and new Facade-enforcing methods on the `SMTP`, `IMAP`, and `NNTP` base classes (`getDataWriter`, `appendWithData`, `openMessageReader`). Every protocol stack retains its two-level inheritance structure from `SocketClient`, and all Observer infrastructure flows through the single `ProtocolCommandSupport` instance owned by `SocketClient`.
