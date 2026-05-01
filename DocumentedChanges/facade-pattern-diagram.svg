@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 760" font-family="Helvetica, Arial, sans-serif">
+  <rect width="760" height="760" fill="#0b1220"/>
+  <g>
+    <rect x="230" y="30" width="300" height="120" rx="6" ry="6" fill="#1c2433" stroke="#e3a857" stroke-width="1.5"/>
+    <text x="380" y="58" text-anchor="middle" font-size="13" fill="#e3a857" font-style="italic">«concept»</text>
+    <text x="380" y="80" text-anchor="middle" font-size="18" fill="#e3a857" font-weight="bold">Client</text>
+    <line x1="250" y1="92" x2="510" y2="92" stroke="#e3a857" stroke-width="1"/>
+    <text x="380" y="115" text-anchor="middle" font-size="13" fill="#ffffff">Application code</text>
+    <text x="380" y="135" text-anchor="middle" font-size="13" fill="#ffffff">Calls only high-level operations</text>
+  </g>
+  <g>
+    <line x1="380" y1="150" x2="380" y2="220" stroke="#e3a857" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+    <rect x="395" y="170" width="180" height="22" fill="#0b1220" stroke="none"/>
+    <text x="485" y="186" text-anchor="middle" font-size="12" fill="#e3a857" font-style="italic">calls high-level API</text>
+  </g>
+  <g>
+    <rect x="155" y="225" width="450" height="190" rx="6" ry="6" fill="#1c2433" stroke="#e3a857" stroke-width="1.5"/>
+    <text x="380" y="253" text-anchor="middle" font-size="13" fill="#e3a857" font-style="italic">«concept»</text>
+    <text x="380" y="275" text-anchor="middle" font-size="18" fill="#e3a857" font-weight="bold">Facade</text>
+    <line x1="175" y1="287" x2="585" y2="287" stroke="#e3a857" stroke-width="1"/>
+    <text x="380" y="310" text-anchor="middle" font-size="13" fill="#ffffff" font-weight="bold">SMTPClient  /  IMAPClient  /  NNTPClient</text>
+    <text x="380" y="335" text-anchor="middle" font-size="12.5" fill="#cfd8e3">sendMessageData()</text>
+    <text x="380" y="355" text-anchor="middle" font-size="12.5" fill="#cfd8e3">append()</text>
+    <text x="380" y="375" text-anchor="middle" font-size="12.5" fill="#cfd8e3">postArticle()  /  forwardArticle()  /  __retrieve()</text>
+    <text x="380" y="398" text-anchor="middle" font-size="12" fill="#9aa7b7" font-style="italic">No direct stream access</text>
+  </g>
+  <g>
+    <line x1="380" y1="415" x2="380" y2="490" stroke="#e3a857" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+    <rect x="385" y="438" width="280" height="22" fill="#0b1220" stroke="none"/>
+    <text x="525" y="454" text-anchor="middle" font-size="12" fill="#e3a857" font-style="italic">delegates raw I/O via new accessors</text>
+  </g>
+  <g>
+    <rect x="120" y="495" width="520" height="240" rx="6" ry="6" fill="#1c2433" stroke="#e3a857" stroke-width="1.5"/>
+    <text x="380" y="523" text-anchor="middle" font-size="13" fill="#e3a857" font-style="italic">«concept»</text>
+    <text x="380" y="545" text-anchor="middle" font-size="18" fill="#e3a857" font-weight="bold">Subsystem</text>
+    <line x1="140" y1="557" x2="620" y2="557" stroke="#e3a857" stroke-width="1"/>
+    <text x="380" y="580" text-anchor="middle" font-size="13" fill="#ffffff" font-weight="bold">SMTP  /  IMAP  /  NNTP   (base classes)</text>
+    <text x="380" y="608" text-anchor="middle" font-size="12.5" fill="#cfd8e3">+ getDataWriter() : Writer</text>
+    <text x="380" y="628" text-anchor="middle" font-size="12.5" fill="#cfd8e3">+ openMessageReader() : BufferedReader</text>
+    <text x="380" y="648" text-anchor="middle" font-size="12.5" fill="#cfd8e3">+ appendWithData(args, msg) : boolean</text>
+    <line x1="200" y1="665" x2="560" y2="665" stroke="#3a4658" stroke-width="1" stroke-dasharray="3,3"/>
+    <text x="380" y="687" text-anchor="middle" font-size="12" fill="#9aa7b7" font-style="italic">Owns _writer / _reader_</text>
+    <text x="380" y="707" text-anchor="middle" font-size="12" fill="#9aa7b7" font-style="italic">Owns DotTerminatedMessage* construction</text>
+  </g>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <polygon points="0 0, 10 4, 0 8" fill="#e3a857"/>
+    </marker>
+  </defs>
+</svg>
