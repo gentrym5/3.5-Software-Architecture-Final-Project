@@ -1,4 +1,4 @@
-# Conceptual Diagram — Apache Commons Net 3.5 (After Changes)
+# Conceptual Diagram Apache Commons Net 3.5
 
 
 ```mermaid
